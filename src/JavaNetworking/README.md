@@ -66,3 +66,27 @@ public class TCPServer {
         server.close();
     }
 }
+```
+## UDP
+- DatagramSockett--> for communication
+- DatagramPacket --> To tarnsfer data
+
+```java
+package JavaNetworking;
+import java.net.*;
+public class UdpServer {
+    public static void main(String[] args){
+        DatagramSocket socket = new DatagramSocket(9099);
+         byte data[] = new byte[1024];
+         DatagramPacket packet = new DatagramPacket((data, data.length);
+         packet.receive(packet);
+         String msg = new String(packet.getData(), 0, packet.getLength());
+         System.out.println("message :"+msg);
+         String tomsg ="Hello from Server";
+         byte[] todata = tomsg.getBytes();
+         DatagramPacket topack = new DatagramPacket(todata, todata.length, packet.getAddress(), packet.getPort());
+         socket.send(topack);
+         socket.close();
+    }
+}
+```
