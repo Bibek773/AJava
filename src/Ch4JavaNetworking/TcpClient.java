@@ -1,29 +1,35 @@
 package Ch4JavaNetworking;
+
 import java.net.*;
 import java.io.*;
 
-
 public class TcpClient {
-    public static void main(String[] args) throws Exception{
-        Socket socket = new Socket("localhost", 9097);
+    public static void main(String[] args) throws Exception {
+        Socket socket = new Socket("172.16.10.138", 9097); // Replace with server IP
+        System.out.println("Connected to server.");
 
-
-
-
-
-//        ServerSocket ss = new ServerSocket(9097);
-//        Socket socket =ss.accept();
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter out =new PrintWriter(socket.getOutputStream(), true);
+        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
 
-        out.println("Hello from client");
-        out.flush();
+        // Thread to read from server
+        new Thread(() -> {
+            String msgFromServer;
+            try {
+                while ((msgFromServer = br.readLine()) != null) {
+                    System.out.println("Server: " + msgFromServer);
+                }
+            } catch (IOException e) {
+                System.err.println("Server disconnected.");
+            }
+        }).start();
 
-        String msg = br.readLine();
-        System.out.println("Server:"+msg);
+        // Main thread to send to server
+        String msgToServer;
+        while ((msgToServer = keyboard.readLine()) != null) {
+            out.println(msgToServer);
+        }
 
-        out.close();
-        br.close();
         socket.close();
     }
 }
