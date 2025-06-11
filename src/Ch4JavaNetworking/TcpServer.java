@@ -1,4 +1,4 @@
-package JavaNetworking;
+package Ch4JavaNetworking;
 import java.net.*;
 import java.io.*;
 
