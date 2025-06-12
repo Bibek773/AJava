@@ -771,68 +771,232 @@ class Car extends Vehicle {
 }
 ```
 ---
+## Interface
 
-# 🧩 What is an Interface?
+In Java, interfaces let you define **what** a class should do, without saying **how** it should do it.
 
-An **interface** in Java is a collection of **abstract methods** (methods without a body) and **constants**.  
-Interfaces are used to define a **contract** that implementing classes must follow.
+- Interfaces act like a set of rules. Any class that implements an interface must provide its own version of the methods.
+- Interfaces don’t have variables or method bodies—just method names.
+- Multiple unrelated classes can implement the same interface.
+- A class can implement **multiple interfaces**, helping avoid Java’s single inheritance limitation.
+- Interfaces support **polymorphism**: different classes can respond to the same method call in their own way.
 
-### ✅ Key Points:
-- Interfaces can only have method **declarations**, not implementations (except default/static methods).
-- A class uses the `implements` keyword to implement an interface.
-- A class **must implement all methods** of the interface unless it's declared `abstract`.
+### Syntax
 
-### Interface Declaration
 ```java
 interface InterfaceName {
-    void method1();
-    void method2();
+    void methodName(); // abstract method (no body)
 }
 ```
-**Class implementaion**
-```java
-class ClassName implements InterfaceName {
-    public void method1() {
-        // implementation
-    }
 
-    public void method2() {
-        // implementation
-    }
-}
-```
-**Example**
+### Defining an Interface
 
 ```java
 interface Animal {
-    void sound();
-    void eat();
+    void makeSound();  // method with no body
 }
-
-class Dog implements Animal {
-    public void sound() {
-        System.out.println("Dog barks");
-    }
-
-    public void eat() {
-        System.out.println("Dog eats bones");
-    }
-}
-
-public class Test {
-    public static void main(String[] args) {
-        Dog d = new Dog();
-        d.sound();  // Output: Dog barks
-        d.eat();    // Output: Dog eats bones
-    }
-}
-
 ```
-### Interface vs Abstract Class
--.
-| Feature               | Interface                        | Abstract Class                    |
-|-----------------------|----------------------------------|-----------------------------------|
-| Methods               | Only abstract (until Java 8)     | Can have both abstract & concrete |
-| Constructors          | Not allowed                      | Allowed                           |
-| Variables             | `public static final` only       | Any type                          |
-| Multiple Inheritance  | Yes (via multiple interfaces)    | No                                |
+
+### Implementing an Interface
+
+```java
+class Dog implements Animal {
+    public void makeSound() {
+        System.out.println("Bark!");
+    }
+}
+
+class Cat implements Animal {
+    public void makeSound() {
+        System.out.println("Meow!");
+    }
+}
+```
+
+### Applying an Interface
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Animal myDog = new Dog();  // Interface reference, Dog object
+        Animal myCat = new Cat();  // Interface reference, Cat object
+
+        myDog.makeSound();  // Output: Bark!
+        myCat.makeSound();  // Output: Meow!
+    }
+}
+```
+
+---
+
+## Exception Handling
+
+In programming, unexpected situations (like dividing by zero or accessing a missing file) are called **exceptions**.
+
+### Why Use Exception Handling?
+
+- Prevent the program from crashing
+- Show user-friendly error messages
+- Handle errors logically and continue running
+- Keep code clean and organized
+
+### Common Exceptions
+
+- `ArithmeticException` – Dividing by zero
+- `FileNotFoundException` – File not found
+- `ArrayIndexOutOfBoundsException` – Invalid array index
+
+### Syntax: try-catch-finally
+
+```java
+try {
+    // Code that might throw an exception
+} catch (ExceptionType e) {
+    // Handle the exception
+} finally {
+    // Optional cleanup code
+}
+```
+
+### Example
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        try {
+            int result = 10 / 0;  // This will cause an exception
+            System.out.println("Result: " + result);
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero!");
+        } finally {
+            System.out.println("This always runs.");
+        }
+    }
+}
+```
+
+**Output:**
+```
+Cannot divide by zero!
+This always runs.
+```
+
+---
+
+## Types of Exceptions
+
+1. **Checked Exceptions** – Must be handled or declared using `throws`  
+   _Examples: `IOException`, `SQLException`_
+
+2. **Unchecked Exceptions** – Optional to handle, but recommended  
+   _Examples: `NullPointerException`, `ArithmeticException`_
+
+---
+
+## Keywords and Examples
+
+### try & catch
+
+```java
+public class Example1 {
+    public static void main(String[] args) {
+        try {
+            int a = 5 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("You can't divide by zero!");
+        }
+    }
+}
+```
+
+---
+
+### throw
+
+Used to manually raise an exception.
+
+```java
+public class Example2 {
+    public static void main(String[] args) {
+        int age = 15;
+        if (age < 18) {
+            throw new ArithmeticException("Access denied – You must be 18+.");
+        } else {
+            System.out.println("Access granted.");
+        }
+    }
+}
+```
+
+---
+
+### throws
+
+Used to declare exceptions that a method might throw.
+
+```java
+import java.io.*;
+
+public class Example3 {
+    static void readFile() throws IOException {
+        FileReader file = new FileReader("myfile.txt");
+        BufferedReader br = new BufferedReader(file);
+        System.out.println(br.readLine());
+    }
+
+    public static void main(String[] args) {
+        try {
+            readFile();
+        } catch (IOException e) {
+            System.out.println("File not found or error reading file.");
+        }
+    }
+}
+```
+
+---
+
+### finally
+
+Always runs, used for cleanup.
+
+```java
+public class Example4 {
+    public static void main(String[] args) {
+        try {
+            int data = 10 / 2;
+            System.out.println("Result: " + data);
+        } catch (Exception e) {
+            System.out.println("Error occurred.");
+        } finally {
+            System.out.println("This will always run.");
+        }
+    }
+}
+```
+
+---
+
+### Multiple Catch Blocks
+
+Handle different exceptions in different ways.
+
+```java
+public class Example5 {
+    public static void main(String[] args) {
+        try {
+            int[] arr = new int[3];
+            arr[5] = 100;  // ArrayIndexOutOfBoundsException
+            int num = 10 / 0;  // ArithmeticException
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Array index is out of bounds!");
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero!");
+        } catch (Exception e) {
+            System.out.println("Some other exception occurred.");
+        }
+    }
+}
+```
+
+---
