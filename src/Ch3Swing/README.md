@@ -58,3 +58,5 @@ Types of containers:
 - `JDialog` - A pop-up dialog window.
 
 Swing components must be added to containers for them to be displayed in the GUI.
+
+---
