@@ -175,7 +175,7 @@ InputStream in = socket.getInputStream();
 OutputStream out = socket.getOutputStream();
 ```
 
-### 💻 Client Code Example
+###  Client Code Example
 ```java
 Socket client = new Socket("127.0.0.1", 5000);
 InputStream in = client.getInputStream();
@@ -184,7 +184,7 @@ OutputStream out = client.getOutputStream();
 
 ---
 
-## 📌 Tips for Better Communication
+###  Tips for Better Communication
 
 - Always handle `IOException` using try-catch blocks.
 - Use `BufferedReader` and `PrintWriter` for easier communication:
@@ -195,3 +195,67 @@ OutputStream out = client.getOutputStream();
 - Always close sockets and streams using try-with-resources or in a `finally` block.
 
 ---
+## RMI (Remote Method Invocation)
+- It is an API that allows an object to invoke a method on an object that exists in another address space, which could be on the same machine or on a remote machine.
+- Used to call the method from one computer to another.
+   ![alt text](workingofRMI.png)
+   
+     ***Fig:Working of RMI***
+### Steps
+- Create a new method interface by inheriting from remote. Method should throw RemoteException
+```java
+import java.rmi.*;
+public interface MyRemote extends Remote{
+    public int add(int a, int b)throws RemoteException;
+}
+```
+- Create implementor class which should inherit from UnicastRemoteObject implements the remote method
+
+```java
+import java.rmi.*;
+import java.rmi.server.UnicastRemoteObject;
+
+public class MyRemoteImpl extends UnicastRemoteObject implements MyRemote{
+    public MyRemoteImpl() throws RemoteException
+    {
+        super();
+    }
+    public int add(int a, int b) throws RemoteException{
+        return a+b;
+    }
+}
+```
+- Create a server class, Bind the object
+
+```java
+import java.rmi.*;
+import java.rmi.registry.LocateRegistry;
+
+public class MyRemoteServer {
+  public static void main(String[] args) throws Exception {
+    MyRemoteImpl obj = new MyRemoteImpl();
+    LocateRegistry.createRegistry(1099);
+    System.out.println("RMI Registry Started");
+    Naming.rebind("MyOBJ", obj);
+  }
+}
+```
+- Create a client class. which should call the remote method. 
+
+```java
+import java.rmi.*;
+public class RMIClient {
+    public static void main(String[] args)throws Exception{
+        MyRemot obj = (MyRemote) Naming.lookup("rmi://locakhost/MYOBJ");
+        System.out.println("Reasult from remote call:" +obj.add(10,10));
+    }
+}
+```
+---
+**To Bind object in  RMI Registry**
+- Locate registry, create registry(1099)
+- Naming.rebind("myobj", obj) myobj-> unique id .... obj-> object
+
+**To invoke the method from client**
+- Naming.Lookup("rmi://localhost/obj")
+
