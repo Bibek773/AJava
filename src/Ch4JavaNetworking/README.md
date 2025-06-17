@@ -314,5 +314,75 @@ class URLConnectionDemo {
 }
 ```
 ---
-## Java mail API
-- To send or receive email
+
+
+## 📧 JavaMail API 
+
+The **JavaMail API** is used to send and receive emails using Java.  
+It provides a platform-independent and protocol-independent framework for building mail and messaging applications.
+- `Session`-> To Connect with smtp server
+-  `Message` ->Prepare teh message(to, from, subject, content)
+- `Transport` -> To send email
+
+## ✉️ Key Features
+
+- Sending simple text emails
+- Sending emails with attachments
+- Sending HTML emails
+- Reading emails from mail servers (IMAP/POP3)
+- SMTP authentication and TLS/SSL support
+
+```java
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
+
+import java.util.Properties;
+
+public class SendMail {
+    public static void main(String[] args) {
+
+        // Mail server properties
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");                  // Auth required
+        props.put("mail.smtp.starttls.enable", "true");       // Enable STARTTLS
+        props.put("mail.smtp.host", "smtp.gmail.com");        // SMTP server
+        props.put("mail.smtp.port", "587");                    // TLS port
+
+        // Create session with authenticator
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                // Your Gmail username and app password here
+                return new PasswordAuthentication("a@gmail.com", "your_app_password");
+            }
+        });
+
+        try {
+            // Create a MimeMessage object
+            Message message = new MimeMessage(session);
+
+            // Set From email field
+            message.setFrom(new InternetAddress("a@gmail.com"));
+
+            // Set To email field
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse("t@gmail.com"));
+
+            // Set email subject
+            message.setSubject("hello");
+
+            // Set email body text
+            message.setText("message");
+
+            // Send the message
+            Transport.send(message);
+
+            System.out.println("Email sent successfully");
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
