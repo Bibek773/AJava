@@ -23,15 +23,15 @@ Java Networking enables communication between computers over a network using the
 
 ## 🔌 Important Classes in `java.net`
 
-| Class         | Description                                              |
-|---------------|----------------------------------------------------------|
-| `InetAddress` | Represents an IP address.                                |
-| `Socket`      | Implements a client socket (TCP).                        |
-| `ServerSocket`| Waits for requests from clients and establishes a connection. |
-| `DatagramSocket` | Enables sending and receiving UDP packets.          |
-| `DatagramPacket` | Represents a UDP packet of data.                     |
-| `URL`         | Represents a Uniform Resource Locator.                   |
-| `URLConnection`| Communicates with the resource referenced by a URL.     |
+| Class             | Description                                                   |
+|-------------------|---------------------------------------------------------------|
+| `InetAddress`     | Represents an IP address.                                     |
+| `Socket`          | Implements a client socket (TCP).                             |
+| `ServerSocket`    | Waits for requests from clients and establishes a connection. |
+| `DatagramSocket`  | Enables sending and receiving UDP packets.                    |
+| `DatagramPacket`  | Represents a UDP packet of data.                              |
+| `URL`             | Represents a Uniform Resource Locator.                        |
+| `URLConnection`   | Communicates with the resource referenced by a URL.           |
 
 ---
 
@@ -258,4 +258,61 @@ public class RMIClient {
 
 **To invoke the method from client**
 - Naming.Lookup("rmi://localhost/obj")
+---
 
+## URL (Uniform Resource Locator)
+
+- A URL is a Uniform Resource Locator, used to identify and locate a resource on the World Wide Web.
+  It provides the address of a web resource and is essential in Java for handling web-based content.
+
+!['Unable to display'](images.png)
+
+```java
+URL u = new URL("https://www.facebook.com");
+```
+- getProtocol()
+  - Returns the protocol used (e.g., http, https)
+- getHost()
+  - Returns the host name (e.g., www.facebook.com)
+- getPort()
+  - Returns the port number (returns -1 if not set)
+- getPath()
+  - Returns the file path of the URL
+- getQuery()
+  - Returns the query part of the URL- OpenConnection()
+
+**🔗 Opening Connection to the Web**
+- Java uses the URLConnection class to connect to and interact with a web resource.
+
+```java
+URLConnection connection = url.openConnection();
+InputStream input = connection.getInputStream();
+```
+🔄 Key Method:
+- getInputStream(): Used to read data from the web page or server.
+
+**Example**
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.*;
+
+class URLConnectionDemo {
+    public static void main(String[] args) throws Exception {
+        URL u = new URL("http://www.ghimire-bibek.com.np");
+        URLConnection con = u.openConnection();
+        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        while(true){
+            String line = br.readLine();
+            if(null==line){
+                break;
+            }
+            System.out.println(line);
+        }
+    }
+}
+```
+---
+## Java mail API
+- To send or receive email
