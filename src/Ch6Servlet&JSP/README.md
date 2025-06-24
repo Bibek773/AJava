@@ -49,8 +49,25 @@ A **Web Application** is a client-server application that runs in a browser and 
 - A **Servlet** is a Java class that handles HTTP requests and generates responses.
 - Java program to Accept Request process and generate the response.
 
-### To creat servlets
+### To create servlets
 - Inherit from HttpServlet.
+- Use doGet/doPost Methods
+- Define URL using @webservlets("/Demo)- Annotation
+
+**Example**
+
+```java
+import com.sun.net.httpserver.HttpServer;
+import jakarta.servlet.https.*;
+
+@webservlets("/demo");
+public class MyServlets extends HttpServlet{
+    public static void main(String [] args){
+        printwriter.out = res.getwriter();
+        out.println("Hello");
+    }
+}
+```
 
 ### 🚦 Servlet Life Cycle:
 
@@ -70,6 +87,23 @@ public void destroy() { }
 
 ---
 
+**Example**
+
+```java
+import com.sun.net.httpserver.HttpServer;
+import jakarta.servlet.*;
+
+@WebServlet("/lifecycle")
+public class LifeCycleServlets extends HttpServlet {
+  public void init(ServletConfig config) throws Exception {
+    System.out.println("Servlet Initialized");
+  }
+
+  public void Service(HttpServetRequest req, HttpServletResponse res)throws Exception{
+      System.out.println("Service called...");
+  }
+}
+```
 ## 6.4 Writing Servlet Programs with Servlet APIs
 
 ### ✅ Steps to Write a Servlet:
