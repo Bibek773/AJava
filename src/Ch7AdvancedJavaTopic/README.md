@@ -47,3 +47,17 @@
 5. Create an entity class that represents the table.
 6. Create main class to work with ORM.
 
+## Entity Class
+```java
+@entity
+class employee {
+   @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @column(name = "id")
+    int id;
+    @column(name = "emp-name")
+    String Name;
+    // getters and setters
+    
+}
+```
