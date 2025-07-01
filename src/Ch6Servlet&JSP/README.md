@@ -101,6 +101,10 @@ public class LifeCycleServlets extends HttpServlet {
 
   public void Service(HttpServetRequest req, HttpServletResponse res)throws Exception{
       System.out.println("Service called...");
+      
+  }
+  public void destroy(){
+    System.out.println("Destroyed called...");
   }
 }
 ```
@@ -112,149 +116,185 @@ public class LifeCycleServlets extends HttpServlet {
 2. Override `doGet()` or `doPost()`
 3. Map the servlet in `web.xml` or use `@WebServlet` annotation
 
-### 📌 Example: Basic Servlet
 
-```java
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+### 🔹 **HttpServletRequest Methods**
 
-@WebServlet("/hello")
-public class HelloServlet extends HttpServlet {
-    public void doGet(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException {
-        res.setContentType("text/html");
-        PrintWriter out = res.getWriter();
-        out.println("<h1>Hello from Servlet</h1>");
-    }
-}
-```
+* `getParameter(String)` → Retrieves single parameter value
+* `getParameterValues(String)` → Returns array (for multiple values like checkboxes)
+* `getSession()` → Gets the current session
+* `getCookies()` → Gets the cookies
 
 ---
 
-## 6.5 Reading and Processing Forms
+### 🔹 **Form Input Types**
 
-### 🧾 HTML Form:
+* Text Input
+* Radio Button
+* Select (Dropdown)
+* Checkbox
+* Button
 
 ```html
-<form action="login" method="post">
-  Username: <input type="text" name="username" />
-  Password: <input type="password" name="password" />
-  <input type="submit" value="Login" />
-</form>
+<input type="text" name="name" />
 ```
 
-### 🔄 Servlet to Read Form:
+---
+
+### 🔹 **Example Flow**
+
+1. HTML Form Input
+
+   ```html
+   Name: [ABC]
+   Email: [abc@example.com]
+   [OK]
+   ```
+2. Sent to Servlet
+
+   ```
+   Servlet Output:
+   Hello ABC
+   abc@example.com
+   ```
+
+---
+
+### 📁 **Folder Structure**
+
+```
+webapps/
+├── html/
+├── css/
+├── js/
+├── image/
+└── WEB-INF/
+    ├── classes/ (Java .class files)
+    └── lib/     (.jar libraries)
+```
+
+---
+
+## 📄 **HTML Form**
+
+```html
+<html>
+  <body>
+    <form method="post" action="FormServlet">
+      Name: <input type="text" name="name" /><br />
+      Email: <input type="text" name="email" /><br />
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>
+```
+
+---
+
+## 🔧 **FormServlet.java**
 
 ```java
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException {
-        String user = req.getParameter("username");
-        String pass = req.getParameter("password");
-        
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+
+@WebServlet("/FormServlet")
+public class FormServlet extends HttpServlet {
+    
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        String name = req.getParameter("name");
+        String email = req.getParameter("email");
+
         PrintWriter out = res.getWriter();
-        out.println("Username: " + user + "<br>Password: " + pass);
+        out.println("Name: " + name);
+        out.println("Email: " + email);
+        out.close();
     }
 }
 ```
 
 ---
-
-## 6.6 Handling GET/POST Requests
-
-### 📥 GET vs POST:
-
-* **GET**: Parameters visible in URL, limited size, used for retrieval
-* **POST**: Hidden parameters, larger data, used for form submission
-
-### Example Servlet for Both:
-
-```java
-@WebServlet("/method")
-public class MethodServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException {
-        res.getWriter().println("GET method called");
-    }
-
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException {
-        res.getWriter().println("POST method called");
-    }
-}
-```
-
+remaining
 ---
 
-## 6.7 Database Connectivity Through Servlets
+## 🍪 Cookies in JSP
 
-### ✅ Required:
 
-* MySQL connector JAR
-* JDBC connection setup in Servlet
+* A **cookie** is a small piece of data stored on the **client's browser**.
+* It is mainly used to **track user activity** and **store user information** like name, login status, preferences, etc.
 
-### 📌 Example: Login Validation with MySQL
 
-#### 🧾 Database Table: `user`
-
-| id | username | password |
-| -- | -------- | -------- |
-| 1  | admin    | 1234     |
-
-#### Servlet Code:
+### 🧱 Basic Cookie Methods in Java
 
 ```java
-@WebServlet("/validate")
-public class DBServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-    throws ServletException, IOException {
-        String uname = req.getParameter("username");
-        String pass = req.getParameter("password");
+Cookie cookie = new Cookie(String name, String value); // Create cookie
+cookie.getValue();      // Get the value of the cookie
+cookie.getName();       // Get the name of the cookie
+cookie.setMaxAge(int seconds); // Set the cookie expiration time
+```
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/mydb", "root", "root");
+### ➕ Adding a Cookie to Response
 
-            PreparedStatement ps = con.prepareStatement(
-                "SELECT * FROM user WHERE username=? AND password=?");
+```java
+response.addCookie(cookie); // Send cookie to the client
+```
 
-            ps.setString(1, uname);
-            ps.setString(2, pass);
+### 📝 HTML Form (to take user input)
 
-            ResultSet rs = ps.executeQuery();
-            PrintWriter out = res.getWriter();
-            res.setContentType("text/html");
+```html
+<html>
+<body>
+    <form method="get" action="setcookie.jsp">
+        Name: <input type="text" name="name"><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+```
 
-            if (rs.next()) {
-                out.println("<h2>Login Successful</h2>");
-            } else {
-                out.println("<h2>Login Failed</h2>");
-            }
 
-            rs.close(); ps.close(); con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+### 🍪 JSP to Set Cookie (`setcookie.jsp`)
+
+```jsp
+<%
+String name = request.getParameter("name");
+Cookie cookie = new Cookie("NAME", name);
+cookie.setMaxAge(60 * 60); // 1 hour (optional)
+response.addCookie(cookie);
+out.println("✅ Cookie Added Successfully");
+%>
+```
+
+
+### 🍪 JSP to Read Cookie (`getcookie.jsp`)
+
+```jsp
+<%
+Cookie[] cookies = request.getCookies();
+
+if (cookies != null) {
+    for (Cookie c : cookies) {
+        if (c.getName().equals("NAME")) {
+            String value = c.getValue();
+            out.println("👋 Welcome, " + value);
+            break;
         }
     }
+} else {
+    out.println("❌ No cookies found");
 }
+%>
 ```
 
+
+### 🖼️ Cookie Flow Diagram (Example)
+
+![Cookie Flow](word-image-33-1.webp)
+
+
+
+### 💡 Notes
+
+* Cookies are stored on the **client side**, so don't store sensitive data.
+* You can set `setMaxAge(0)` to delete the cookie.
+* If not set, the cookie is removed when the browser closes (session cookie).
+
 ---
-
-## 🛠️ Tools You Need:
-
-* **Apache Tomcat** (Web server)
-* **MySQL** (Database)
-* **Eclipse/IntelliJ** (IDE)
-* **Servlet API** (Included in Tomcat lib folder)
-
----
-
-Let me know if you want:
-
-* PDF version of this note ✅
-* JSP coverage for Unit 7 or continuation ✅
-* Lab-based programs from this unit ✅
