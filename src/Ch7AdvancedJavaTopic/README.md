@@ -93,3 +93,18 @@ public class HibernateDemo {
     }
 }
 ```
+
+## WebFramework
+
+- A web framework is a software framework designed to aid the development of web applications including web services, web resources, and web APIs.
+
+<u>Java Based web Framework</u>
+- Spring Boot\MVC
+- JSF (JavaServer Faces)
+- Stmts
+**Features**
+- Security
+- Templating
+- MVC pattern
+- REST
+- ORM
