@@ -1649,4 +1649,3 @@ JSP provides built-in objects that can be used directly:
 ```
 
 ---
-technologies.
