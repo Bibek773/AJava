@@ -108,3 +108,42 @@ public class HibernateDemo {
 - MVC pattern
 - REST
 - ORM
+
+
+## Threading
+
+- Process
+- Multithreading
+ - To run process at a same time
+ ![NO image to show](multithreading-in-java.png)
+
+#### To Create Thread
+- By inheriting from thread
+- By implementing Runnable interface
+
+#### Life Cycle of Thread
+![alt text](thread_life_cycle.jpg)
+
+```java
+class ThreadDemo implements Runnable{
+    Thread t;
+    ThreadDemo(){
+        t= new Thread(this);
+        t.start();
+    }
+    public void run(){
+        for( int i= 0; i<10;i++){
+            System.out.println("Hello:"+i);
+            try{
+                t.sleep(1000);
+                
+            }catch (Exception e){}
+        }
+    }
+    public static void main(String[] args){
+        ThreadDemo obj = new ThreadDemo();
+        ThreadDemo obj1 = new ThreadDemo();
+        
+    }
+}
+```
