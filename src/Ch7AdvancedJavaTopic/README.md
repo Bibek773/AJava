@@ -1,3 +1,4 @@
+
 # Advanced Java Topic
 
 ## ORM (Object Relation Mapping)
@@ -122,8 +123,12 @@ public class HibernateDemo {
 - By implementing Runnable interface
 
 #### Life Cycle of Thread
+
 ![alt text](thread_life_cycle.jpg)
 
+
+
+*Example of thread*
 ```java
 class ThreadDemo implements Runnable{
     Thread t;
@@ -145,5 +150,100 @@ class ThreadDemo implements Runnable{
         ThreadDemo obj1 = new ThreadDemo();
         
     }
+}
+```
+###  ️Synchronization
+Prevent form accusing sam resources at a time.
+#### Types
+- Method
+- Block
+
+
+**Example**
+```java
+class Bank
+{
+    int Balance = 1000;
+    public syncronize void withdraw(string n, int amt) {
+        if (Balance >= amt) {
+            System.out.println("Successfull Witdraw by " + amt);
+
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                balance -= amt;
+            }
+        }
+        else{
+            System.out.println("Balance is not Enough");
+        }
+    }   
+}
+```
+
+```java
+class BankWithdraw extends Thread{
+    BankAccount acc;
+    String name;
+    int amt;
+    BankWithdraw(BankAccount acc, int amt, String n){
+        this.acc = acc;
+        this.amt = amt;
+        this.name = n;
+    }
+    public void run(){
+        acc.withdraw(n,amt);
+    }
+}
+
+```
+```java
+class caller
+{
+    public static void main(String[] args){
+        BankAccount AC = new BankAccount();
+        BankWithdraw obj1 = new Bankwithdraw(AC, 500, "hari");
+        BankWithdraw obj1 = new Bankwithdraw(AC, 400, "Ram");
+    }
+}
+
+```
+
+---
+
+### Design Pattern
+- Design pattern sare proven, reusable solution for common problems in Software design.
+#### Types
+i. **Singleton** -> Ensure only one instance of a class os created.<br>
+![img_1.png](img_1.png)<br>
+ii. **Factory** -> Create the object without exposing the instantiation logic.<br>
+
+iii. **Abstract Factory** -> Product Families of related objects without specifying concrete classes.<br>
+
+**Example of Singleton**
+```java
+class Singleton {
+ // Step 1: private static instance
+ private static Singleton instance;
+
+ // Step 2: private constructor to prevent instantiation
+ private Singleton() {
+  System.out.println("Singleton instance created");
+ }
+
+ // Step 3: public static method to return the single instance (Thread-safe)
+ public static synchronized Singleton getInstance() {
+  if (instance == null) {
+   instance = new Singleton();
+  }
+  return instance;
+ }
+}
+
+class SingletonDemo{
+    public static void main(String[] args){
+        Singleton obj = Singleton.getinstance();
+        Singleton obj1 = Singleton.getInstance();
+ }
 }
 ```
